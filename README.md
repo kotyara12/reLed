@@ -10,7 +10,6 @@ The library extension for the "system" LED rLedSys32 allows the device status to
 
 Description: https://kotyara12.ru/pubs/iot/led32/
 
-----------------
 # USING
 
 To create a task for controlling an LED, use the ledTaskCreate function:
@@ -34,22 +33,19 @@ ledQueue is a pointer to the queue created in ledTaskCreate (...).
 msgMode - set operating mode (or command), the list of possible commands see below
 msgValue1, msgValue2, msgValue3 - passed values. Some commands do not require a value, specify 0 or any other number.
 
-----------------
 # OPERATING MODES / CONTROL COMMANDS
 
 lmEnable
 Locking and unlocking the LED (for example, suppressing any activity at night)
 Format: lmEnable "state" (ex: "lmEnable 0" or "lmEnable 1")
    
-lmOff			
-----------------
+* lmOff			
 LED off
 Format: lmOff (ignore parameters)
 ¯¯¯|______________________________________________________________
    ^
 
-lmOn			
-----------------
+* lmOn			
 LED on
 Format: lmOn (ignore parameters)
 ___|¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
