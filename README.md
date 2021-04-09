@@ -37,7 +37,7 @@ msgValue1, msgValue2, msgValue3 - passed values. Some commands do not require a 
 
 # OPERATING MODES / CONTROL COMMANDS
 
-lmEnable
+- lmEnable
 Locking and unlocking the LED (for example, suppressing any activity at night)
 Format: lmEnable "state" (ex: "lmEnable 0" or "lmEnable 1")
    
@@ -60,14 +60,12 @@ Format: lmBlinkOn "number of flashes in a series" "period of flashes in a series
 (for example "lmBlinkOn 1 500 500" - uniform or "lmBlinkOn 3 100 5000" - in series)
 Note: here you cannot set the duration between flashes in a series, it is taken equal to the duration of the flash itself
 
-!!! The blinkSet mode is autosave !!!
--------------------------------
-If the lmBlinkOn command was received, and after it any other mode (lmOn / lmFlash) was activated, then after its completion (the lmOff command or the specified number of flashes for lmFlash) the previous lmBlinkOn mode will be automatically restored (until it was canceled by the lmBlinkOff command)
--------------------------------
-
 - lmBlinkOff  
 Disable blinking (waiting for next command)
 Format: lmBlinkOff (ignore parameters)
+
+!!! The blinkSet mode is autosave !!!
+If the lmBlinkOn command was received, and after it any other mode (lmOn / lmFlash) was activated, then after its completion (the lmOff command or the specified number of flashes for lmFlash) the previous lmBlinkOn mode will be automatically restored (until it was canceled by the lmBlinkOff command)
 
 
 # Example command sequence:
