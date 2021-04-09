@@ -10,6 +10,7 @@ The library extension for the "system" LED rLedSys32 allows the device status to
 
 Description: https://kotyara12.ru/pubs/iot/led32/
 
+
 # USING
 
 To create a task for controlling an LED, use the ledTaskCreate function:
@@ -33,55 +34,42 @@ ledQueue is a pointer to the queue created in ledTaskCreate (...).
 msgMode - set operating mode (or command), the list of possible commands see below
 msgValue1, msgValue2, msgValue3 - passed values. Some commands do not require a value, specify 0 or any other number.
 
+
 # OPERATING MODES / CONTROL COMMANDS
 
 lmEnable
 Locking and unlocking the LED (for example, suppressing any activity at night)
 Format: lmEnable "state" (ex: "lmEnable 0" or "lmEnable 1")
    
-* lmOff			
+- lmOff			
 LED off
 Format: lmOff (ignore parameters)
-¯¯¯|______________________________________________________________
-   ^
 
-* lmOn			
+- lmOn			
 LED on
 Format: lmOn (ignore parameters)
-___|¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-   ^
 
-lmFlash
-----------------
+- lmFlash
 One or more flashes with a specified duration and interval between flashes
 Format: lmFlash "number of flashes" "duration of flashes" "pause between flashes"
 (for example "lmFlash 3 100 500" or "lmFlash 1 250 250")
-___|¯|___|¯|___|¯|________________________________________________
-   ^
 
-lmBlinkOn
-----------------
+- lmBlinkOn
 Continuous flashing: uniform or in series of flashes (for example, three flashes - pause, etc.)
 Format: lmBlinkOn "number of flashes in a series" "period of flashes in a series" "pause between series"
 (for example "lmBlinkOn 1 500 500" - uniform or "lmBlinkOn 3 100 5000" - in series)
 Note: here you cannot set the duration between flashes in a series, it is taken equal to the duration of the flash itself
-___|¯|_|¯|_|¯|____________|¯|_|¯|_|¯|____________|¯|_|¯|_|¯|______
-   ^
-------------------------------------------------------------------
+
 !!! The blinkSet mode is autosave !!!
-------------------------------------------------------------------
+-------------------------------
 If the lmBlinkOn command was received, and after it any other mode (lmOn / lmFlash) was activated, then after its completion (the lmOff command or the specified number of flashes for lmFlash) the previous lmBlinkOn mode will be automatically restored (until it was canceled by the lmBlinkOff command)
-------------------------------------------------------------------
+-------------------------------
 
-
-lmBlinkOff  
-----------------
+- lmBlinkOff  
 Disable blinking (waiting for next command)
 Format: lmBlinkOff (ignore parameters)
-_|¯|_|¯|__________________________________________________________
-        ^
 
-----------------
+
 # Example command sequence:
 
 lmOn:                 LED is on
@@ -96,7 +84,6 @@ lmBlinkOn 1 500 500:  change of blinking mode - continuous uniform blinking 0.5 
 lmBlinkOff:           disable blinking mode, off
 
 
-----------------
 # SYSTEM LED (built-in can be used)
 
 Use the functions from the rLedSys32.h module to provide access to the main LED from various modules and libraries and to indicate the device mode. Calling ledSysInit(...) creates the ledSystem task and then redirects all calls to it. If there was no ledSysInit (...) call, then the commands "go into space".
@@ -113,7 +100,7 @@ SYSLED_MQTT_ERROR           cannot connect to the MQTT broker or send data to th
 SYSLED_TELEGRAM_ERROR       unable to send data to the telegram channel
 SYSLED_OTHER_PUB_ERROR      cannot send data to other resources (ThingSpeak, etc.)
 
-----------------
+
 # SETTING FLASHING MODES FOR SYSTEM LED
 
 Changing the blinking modes for the system LED can be done using the preprocessor macros defined in the project_config.h file. The project_config.h file may be missing, in which case the default values ​​will be used.
