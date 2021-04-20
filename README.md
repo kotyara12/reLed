@@ -6,7 +6,7 @@ It is supported to turn on the LED both by setting the high level and low (depen
 
 It is possible to forcibly suppress LED flashes for a while (for example, you can turn off the LEDs on devices at night, so as not to interfere with sleep).
 
-The library extension for the "system" LED rLedSys32 allows the device status to be indicated using a single LED (as in car alarms and printers). In addition, the functions of the system LED can be used in a wide variety of places in the code without having to worry about which pin and how the main LED is connected.
+The library extension for the "system" LED reLedSys allows the device status to be indicated using a single LED (as in car alarms and printers). In addition, the functions of the system LED can be used in a wide variety of places in the code without having to worry about which pin and how the main LED is connected.
 
 Description: https://kotyara12.ru/pubs/iot/led32/
 
@@ -84,10 +84,10 @@ lmBlinkOff:           disable blinking mode, off
 
 ## SYSTEM LED (built-in can be used)
 
-Use the functions from the rLedSys32.h module to provide access to the main LED from various modules and libraries and to indicate the device mode. Calling ledSysInit(...) creates the ledSystem task and then redirects all calls to it. If there was no ledSysInit (...) call, then the commands "go into space".
+Use the functions from the reLedSys.h module to provide access to the main LED from various modules and libraries and to indicate the device mode. Calling ledSysInit(...) creates the ledSystem task and then redirects all calls to it. If there was no ledSysInit (...) call, then the commands "go into space".
 
 By setting system flags using the ledSysStateSet() and ledSysStateClear() functions, predefined blinking modes can be automatically enabled to indicate the status of the device.
-See rLedSys.h for available flags:
+See reLedSys.h for available flags:
 
 SYSLED_ERROR                error
 SYSLED_WARNING              warning

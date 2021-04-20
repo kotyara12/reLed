@@ -20,7 +20,7 @@
     {
         "name": "platformio_and_arduinoide",
         "base": "examples",
-        "files": ["readme.md", "readme.ru", "platformio-esp32-espidf/src/main.c", "platformio-esp32-espidf/platformio.ini", "platformio-esp32-espidf/src/project_config.h"]
+        "files": ["README.md", "README.ru", "platformio-esp32-espidf/src/main.c", "platformio-esp32-espidf/platformio.ini", "platformio-esp32-espidf/src/project_config.h"]
     }
   ]
 }
