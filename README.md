@@ -11,7 +11,7 @@ The library extension for the "system" LED rLedSys32 allows the device status to
 Description: https://kotyara12.ru/pubs/iot/led32/
 
 
-# USING
+## USING
 
 To create a task for controlling an LED, use the ledTaskCreate function:
 
@@ -35,7 +35,7 @@ msgMode - set operating mode (or command), the list of possible commands see bel
 msgValue1, msgValue2, msgValue3 - passed values. Some commands do not require a value, specify 0 or any other number.
 
 
-# OPERATING MODES / CONTROL COMMANDS
+## OPERATING MODES / CONTROL COMMANDS
 
 - lmEnable
 Locking and unlocking the LED (for example, suppressing any activity at night)
@@ -68,7 +68,7 @@ Format: lmBlinkOff (ignore parameters)
 If the lmBlinkOn command was received, and after it any other mode (lmOn / lmFlash) was activated, then after its completion (the lmOff command or the specified number of flashes for lmFlash) the previous lmBlinkOn mode will be automatically restored (until it was canceled by the lmBlinkOff command)
 
 
-# Example command sequence:
+## Example command sequence:
 
 lmOn:                 LED is on
 lmOff:                LED off
@@ -82,7 +82,7 @@ lmBlinkOn 1 500 500:  change of blinking mode - continuous uniform blinking 0.5 
 lmBlinkOff:           disable blinking mode, off
 
 
-# SYSTEM LED (built-in can be used)
+## SYSTEM LED (built-in can be used)
 
 Use the functions from the rLedSys32.h module to provide access to the main LED from various modules and libraries and to indicate the device mode. Calling ledSysInit(...) creates the ledSystem task and then redirects all calls to it. If there was no ledSysInit (...) call, then the commands "go into space".
 
@@ -99,7 +99,7 @@ SYSLED_TELEGRAM_ERROR       unable to send data to the telegram channel
 SYSLED_OTHER_PUB_ERROR      cannot send data to other resources (ThingSpeak, etc.)
 
 
-# SETTING FLASHING MODES FOR SYSTEM LED
+## SETTING FLASHING MODES FOR SYSTEM LED
 
 Changing the blinking modes for the system LED can be done using the preprocessor macros defined in the project_config.h file. The project_config.h file may be missing, in which case the default values ​​will be used.
 It is necessary that this file during compilation was available not only from the main sketch, but also from libraries.

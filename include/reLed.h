@@ -6,8 +6,8 @@
  *
 */
 
-#ifndef RLED32_H_
-#define RLED32_H_
+#ifndef __RE_LED_H__
+#define __RE_LED_H__
 
 #include <stdint.h>
 #include "freertos/FreeRTOS.h"
@@ -77,4 +77,4 @@ void ledTaskDelete(ledQueue_t ledQueue);
 }
 #endif
 
-#endif // RLED32_H_
+#endif // __RE_LED_H__

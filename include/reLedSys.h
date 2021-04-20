@@ -6,11 +6,11 @@
  *
  */
 
-#ifndef RLEDSYS32_H_
-#define RLEDSYS32_H_
+#ifndef __RE_LEDSYS_H__
+#define __RE_LEDSYS_H__
 
 #include <esp_types.h>
-#include "rLed32.h"
+#include "reLed.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/event_groups.h"
 #include "driver/gpio.h"
@@ -46,4 +46,4 @@ void ledSysStateClear(const EventBits_t sysState, const bool forced);
 }
 #endif
 
-#endif // RLEDSYS32_H_
+#endif // __RE_LEDSYS_H__
