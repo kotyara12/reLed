@@ -97,6 +97,7 @@ espLed::espLed(const int8_t ledGPIO, const bool ledHigh, ledCustomControl_t cust
   _customControl = customControl;
   _ledInit = false;
   _ledOn = false;
+  _ledWait = portMAX_DELAY;
   _onCount = 0;
   _ledFlash = false;
   _flashDuration = 0;
@@ -317,9 +318,6 @@ void espLed::processTimeout()
       _ledWait = _blinkDuration / portTICK_RATE_MS;
       ledSetState(true);
     };
-  } else {
-    // It can't be
-    rlog_w(pcTaskGetTaskName(NULL), "processTimeout() was called in an unsupported mode!");
   };
 }
 
