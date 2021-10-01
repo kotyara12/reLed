@@ -1,6 +1,6 @@
 {
   "name": "reLed",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "description": "ESP32 library for easy control of one or more LEDs: on / off, flash series, blinking. Switch blinking modes with simple commands. Indication of the device status using one LED (as in car alarms and printers).",
   "keywords": "led, blink",
   "authors":
@@ -15,12 +15,5 @@
   "homepage": "https://kotyara12.ru/pubs/iot/led32/",
   "frameworks": ["arduino", "espidf"],
   "platforms": ["espressif32"],
-  "dependencies": {"kotyara12/rLog" : "^1.2.0"},
-  "examples": [
-    {
-        "name": "platformio_and_arduinoide",
-        "base": "examples",
-        "files": ["README.md", "README.ru", "platformio-esp32-espidf/src/main.c", "platformio-esp32-espidf/platformio.ini", "platformio-esp32-espidf/src/project_config.h"]
-    }
-  ]
+  "dependencies": {"kotyara12/rLog" : "^1.2.0"}
 }

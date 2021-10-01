@@ -1,7 +1,7 @@
 #include "reLed.h"
 #include "rLog.h"
 
-static const char * ledTAG = "rLed";
+static const char * logTAG = "RLED";
 
 // -----------------------------------------------------------------------------------------------------------------------
 // -------------------------------------------- Importing project parameters ---------------------------------------------
@@ -165,12 +165,12 @@ void espLed::ledEnabled(bool newEnabled)
   if (_ledEnabled != newEnabled) {
     _ledEnabled = newEnabled;
     if (_ledEnabled) {
-      rlog_d(pcTaskGetTaskName(NULL), "LED enabled");
+      rlog_v(pcTaskGetTaskName(NULL), "LED enabled");
       // Turn on the LED if it is enabled and it should be on by _ledState
       ledSetLevel(_ledState);
     }
     else {
-      rlog_d(pcTaskGetTaskName(NULL), "LED disabled");
+      rlog_v(pcTaskGetTaskName(NULL), "LED disabled");
       // Turn off the LED without changing the status (the status will change as before, but the LED will remain off)
       ledSetLevel(false);
     };
@@ -405,10 +405,10 @@ void ledTaskExec(void *pvParameters)
 ledQueue_t ledTaskCreate(const int8_t ledGPIO, const bool ledHigh, const char* taskName, ledCustomControl_t customControl)
 {
   // Create a message queue to control the LED
-  rlog_v(ledTAG, "Creating message queue to control LED on GPIO %d", ledGPIO);
+  rlog_v(logTAG, "Creating message queue to control LED on GPIO %d", ledGPIO);
   ledQueue_t ledQueue = xQueueCreate(CONFIG_LED_QUEUE_SIZE, sizeof(ledQueueData_t));
   if (ledQueue == NULL) {
-    rlog_e(ledTAG, "Error creating message queue to control LED on GPIO %d", ledGPIO);
+    rlog_e(logTAG, "Error creating message queue to control LED on GPIO %d", ledGPIO);
     return NULL;
   };
 
@@ -417,23 +417,23 @@ ledQueue_t ledTaskCreate(const int8_t ledGPIO, const bool ledHigh, const char* t
   handles->ledQueue = ledQueue;
 
   // Create an LED control object
-  rlog_v(ledTAG, "Creating an LED control instance on GPIO %d", ledGPIO);
+  rlog_v(logTAG, "Creating an LED control instance on GPIO %d", ledGPIO);
   handles->ledInstance = new espLed(ledGPIO, ledHigh, customControl);
   if (handles->ledInstance == NULL) {
     delete handles;
     vQueueDelete(ledQueue);
-    rlog_e(ledTAG, "Error creating LED control object on GPIO %d", ledGPIO);
+    rlog_e(logTAG, "Error creating LED control object on GPIO %d", ledGPIO);
     return NULL;
   };
 
   // Create a task to control the LED
-  rlog_v(ledTAG, "Creating task [ %s ] to control LED on GPIO %d, stack size in bytes: %d", taskName, ledGPIO, CONFIG_LED_TASK_STACK_SIZE);
+  rlog_v(logTAG, "Creating task [ %s ] to control LED on GPIO %d, stack size in bytes: %d", taskName, ledGPIO, CONFIG_LED_TASK_STACK_SIZE);
   TaskHandle_t ledTask;
   xTaskCreatePinnedToCore(ledTaskExec, taskName, CONFIG_LED_TASK_STACK_SIZE, (void*)handles, CONFIG_LED_TASK_PRIORITY, &ledTask, CONFIG_LED_TASK_CORE);
   if (ledTask == NULL) {
     delete handles;
     vQueueDelete(ledQueue);
-    rlog_e(ledTAG, "Error creating task [ %s ] to control LED on GPIO %d", taskName, ledGPIO);
+    rlog_e(logTAG, "Error creating task [ %s ] to control LED on GPIO %d", taskName, ledGPIO);
     return NULL;
   };
 
@@ -466,7 +466,7 @@ void ledTaskDelete(ledQueue_t ledQueue)
   // If the LED queue exists, then delete it
   // The task will self-destruct in ledTaskExec along with handles
   if (ledQueue != NULL) {
-    rlog_v(ledTAG, "Delete LED control queue");
+    rlog_v(logTAG, "Delete LED control queue");
     vQueueDelete(ledQueue);
     ledQueue = NULL;
   };
