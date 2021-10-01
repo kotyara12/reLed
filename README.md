@@ -80,34 +80,3 @@ lmFlash 30 100 500:   the LED will blink 30 times with a duration of 100 ms with
 lmOff:                nothing has changed ;-)
 lmBlinkOn 1 500 500:  change of blinking mode - continuous uniform blinking 0.5 s on / 0.5 s off
 lmBlinkOff:           disable blinking mode, off
-
-
-## SYSTEM LED (built-in can be used)
-
-Use the functions from the reLedSys.h module to provide access to the main LED from various modules and libraries and to indicate the device mode. Calling ledSysInit(...) creates the ledSystem task and then redirects all calls to it. If there was no ledSysInit (...) call, then the commands "go into space".
-
-By setting system flags using the ledSysStateSet() and ledSysStateClear() functions, predefined blinking modes can be automatically enabled to indicate the status of the device.
-See reLedSys.h for available flags:
-
-SYSLED_ERROR                error
-SYSLED_WARNING              warning
-SYSLED_WIFI_CONNECTED       WiFi hotspot connection established
-SYSLED_WIFI_INET_AVAILABLE  internet is available (can be determined by ping)
-SYSLED_WIFI_ERROR           WiFi connection error (access point not available or authorization fails)
-SYSLED_MQTT_ERROR           cannot connect to the MQTT broker or send data to the topic
-SYSLED_TELEGRAM_ERROR       unable to send data to the telegram channel
-SYSLED_OTHER_PUB_ERROR      cannot send data to other resources (ThingSpeak, etc.)
-
-
-## SETTING FLASHING MODES FOR SYSTEM LED
-
-Changing the blinking modes for the system LED can be done using the preprocessor macros defined in the project_config.h file. The project_config.h file may be missing, in which case the default values ​​will be used.
-It is necessary that this file during compilation was available not only from the main sketch, but also from libraries.
-
-In PlatformIO, you can tell the compiler where to find the project_config.h file by using the build_flags = -I<directory> option in platformio.ini.
-For example, I put project_config.h in the src subdirectory (same as the main project file). In this case, I'll add the following lines to platformio.ini:
-
-[env]
-build_flags = -Isrc
-
-In the Arduino IDE, I have not yet found another way, except to copy the sources of the libraries and project_config.h to the same directory where the sketch itself is located. It's not very convenient, but the Arduino IDE itself is not the most user-friendly tool.
