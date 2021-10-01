@@ -71,12 +71,30 @@ If the lmBlinkOn command was received, and after it any other mode (lmOn / lmFla
 ## Example command sequence:
 
 lmOn:                 LED is on
+
 lmOff:                LED off
+
 lmFlash 3 100 500:    the LED will blink three times with a duration of 100 ms with a pause between flashes of 500 ms, after which it will go out
+
 lmBlinkOn 2 100 5000: LED starts blinking in a series of 2 flashes with a duration of 100 ms and a pause between bursts of 5000 ms
+
 lmOn:                 LED on, blinking temporarily suspended
+
 lmOff:                return to the last blinking mode (in a series of 2 blinks for 100 ms after 5 seconds)
+
 lmFlash 30 100 500:   the LED will blink 30 times with a duration of 100 ms with a pause between flashes of 500 ms, after which we automatically return to the last blinking mode (in a series of 2 flashes of 100 ms each after 5 seconds)
+
 lmOff:                nothing has changed ;-)
+
 lmBlinkOn 1 500 500:  change of blinking mode - continuous uniform blinking 0.5 s on / 0.5 s off
+
 lmBlinkOff:           disable blinking mode, off
+
+
+## Dependencies:
+  - https://github.com/kotyara12/rLog
+
+### Notes:
+  - libraries starting with the <b>re</b> prefix are only suitable for ESP32 and ESP-IDF
+  - libraries starting with the <b>ra</b> prefix are only suitable for ARDUINO compatible code
+  - libraries starting with the <b>r</b> prefix can be used in both cases (in ESP-IDF and in ARDUINO)
