@@ -119,6 +119,7 @@ void espLed::initGPIO()
   if (_customControl == NULL) {
     gpio_pad_select_gpio(static_cast<gpio_num_t>(_ledGPIO));
     gpio_set_direction(static_cast<gpio_num_t>(_ledGPIO), GPIO_MODE_OUTPUT);
+    gpio_set_pull_mode(static_cast<gpio_num_t>(_ledGPIO), GPIO_FLOATING);
   };
   ledSetLevel(_ledState);
 };
