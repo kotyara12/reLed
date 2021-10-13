@@ -67,11 +67,12 @@ class espLed {
     uint16_t _blinkQuantity = 0;
     uint16_t _blinkInterval = 0;
     uint16_t _blinkCount = 0;
+    bool _ledBlinkPriority = false;
 
     void ledSetLevel(bool newLevel);
     void ledSetState(bool newState);
   public:
-    espLed(const int8_t ledGPIO, const bool ledHigh, ledCustomControl_t customControl = NULL);
+    espLed(int8_t ledGPIO, bool ledHigh, bool blinkPriority, ledCustomControl_t customControl = NULL);
 
     void initGPIO();
 
@@ -90,10 +91,11 @@ class espLed {
     void processTimeout();
 };
 
-espLed::espLed(const int8_t ledGPIO, const bool ledHigh, ledCustomControl_t customControl)
+espLed::espLed(int8_t ledGPIO, bool ledHigh, bool blinkPriority, ledCustomControl_t customControl)
 {
   _ledGPIO = ledGPIO;
   _ledHigh = ledHigh;
+  _ledBlinkPriority = blinkPriority;
   _customControl = customControl;
   _ledInit = false;
   _ledOn = false;
@@ -133,7 +135,11 @@ void espLed::ledSetLevel(bool newLevel)
 
   if (_ledGPIO > -1) {
     if (_customControl == NULL) {
-      gpio_set_level(static_cast<gpio_num_t>(_ledGPIO), (newLevel == _ledHigh));
+      if (_ledHigh) {
+        gpio_set_level(static_cast<gpio_num_t>(_ledGPIO), newLevel);
+      } else {
+        gpio_set_level(static_cast<gpio_num_t>(_ledGPIO), !newLevel);
+      };
     }
     else {
       _customControl(_ledGPIO, (newLevel == _ledHigh));
@@ -184,6 +190,10 @@ void espLed::ledOn(const bool fixed)
   if (fixed) _onCount++;
   rlog_v(pcTaskGetTaskName(NULL), "LED on : %d", _onCount);
   _ledOn = true;
+  if (!_ledBlinkPriority) {
+    _ledFlash = false;
+    _ledBlink = false;
+  };
   _ledWait = portMAX_DELAY;
   ledSetState(true);
 }
@@ -195,14 +205,20 @@ void espLed::ledOff(const bool fixed)
   if (_onCount > 0) {
     rlog_v(pcTaskGetTaskName(NULL), "LED off blocked: %d", _onCount);
   } else {
-    rlog_v(pcTaskGetTaskName(NULL), "LED off : %d", _onCount);
+    rlog_v(pcTaskGetTaskName(NULL), "LED off: %d", _onCount);
     _ledOn = false;
-    if (_ledFlash) {
-      _ledWait = _flashInterval / portTICK_RATE_MS; 
-    } else if (_ledBlink) {
-      _ledWait = _blinkInterval / portTICK_RATE_MS; 
-      _blinkCount = 0;
+    if (_ledBlinkPriority) {
+      if (_ledFlash && (_flashInterval > 0)) {
+        _ledWait = _flashInterval / portTICK_RATE_MS; 
+      } else if (_ledBlink && (_blinkInterval > 0)) {
+        _ledWait = _blinkInterval / portTICK_RATE_MS; 
+        _blinkCount = 0;
+      } else {
+        _ledWait = portMAX_DELAY;
+      };
     } else {
+      _ledFlash = false;
+      _ledBlink = false;
       _ledWait = portMAX_DELAY;
     };
     ledSetState(false);
@@ -220,6 +236,11 @@ void espLed::flashOn(uint16_t flashQuantity, uint16_t flashDuration, uint16_t fl
   _flashQuantity = flashQuantity;
   _flashInterval = flashInterval;
   _flashCount = 0;
+
+  if (!_ledBlinkPriority) {
+    _ledOn = false;
+    _ledBlink = false;
+  };
 
   // Turn on the LED if the continuous light is not blocked by the counter
   if (_onCount == 0) {
@@ -239,10 +260,11 @@ void espLed::flashOff()
     // Turn on the LED if the continuous light is not blocked by the counter
     if (_onCount == 0) {
       if (_ledOn) _ledOn = false;
-      if (_ledBlink) {
+      if (_ledBlinkPriority && _ledBlink) {
         _ledWait = _blinkInterval / portTICK_RATE_MS; 
         _blinkCount = 0;
       } else {
+        _ledBlink = false;
         _ledWait = portMAX_DELAY;  
       };
       ledSetState(false);
@@ -276,13 +298,14 @@ void espLed::blinkOff()
   if (_ledBlink) {
     rlog_v(pcTaskGetTaskName(NULL), "LED blink off");
     _ledBlink = false;
+    _ledFlash = false;
     
     // Turn on the LED if the continuous light is not blocked by the counter
     if (_onCount == 0) {
       if (_ledOn) _ledOn = false;
-      _ledWait = portMAX_DELAY;
       ledSetState(false);
     };
+    _ledWait = portMAX_DELAY;
   };
 };
 
@@ -380,6 +403,7 @@ void ledTaskExec(void *pvParameters)
 
       // If you get here, it means there was a timeout exit and it's time to switch the LED
       _hHandles->ledInstance->processTimeout();
+      vTaskDelay(1);
     };
 
     // If for some reason the queue has not been deleted, delete it
@@ -403,7 +427,7 @@ void ledTaskExec(void *pvParameters)
 }
 
 // Create LED control task
-ledQueue_t ledTaskCreate(const int8_t ledGPIO, const bool ledHigh, const char* taskName, ledCustomControl_t customControl)
+ledQueue_t ledTaskCreate(int8_t ledGPIO, bool ledHigh, bool blinkPriority, const char* taskName, ledCustomControl_t customControl)
 {
   // Create a message queue to control the LED
   rlog_v(logTAG, "Creating message queue to control LED on GPIO %d", ledGPIO);
@@ -419,7 +443,7 @@ ledQueue_t ledTaskCreate(const int8_t ledGPIO, const bool ledHigh, const char* t
 
   // Create an LED control object
   rlog_v(logTAG, "Creating an LED control instance on GPIO %d", ledGPIO);
-  handles->ledInstance = new espLed(ledGPIO, ledHigh, customControl);
+  handles->ledInstance = new espLed(ledGPIO, ledHigh, blinkPriority, customControl);
   if (handles->ledInstance == NULL) {
     delete handles;
     vQueueDelete(ledQueue);

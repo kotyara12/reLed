@@ -17,10 +17,6 @@
 
 typedef QueueHandle_t ledQueue_t;
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 // With this callback function, you can control the LEDs connected via the GPIO expansion boards
 typedef void (*ledCustomControl_t) (int8_t ledGPIO, bool ledValue);
 
@@ -66,8 +62,12 @@ typedef struct {
   uint16_t msgValue3;
 } ledQueueData_t;
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 // Create LED control task
-ledQueue_t ledTaskCreate(const int8_t ledGPIO, const bool ledHigh, const char* taskName, ledCustomControl_t customControl);
+ledQueue_t ledTaskCreate(int8_t ledGPIO, bool ledHigh, bool blinkPriority, const char* taskName, ledCustomControl_t customControl);
 // Sending a command to the task queue for mode switching
 bool ledTaskSend(ledQueue_t ledQueue, ledMode_t msgMode, uint16_t msgValue1, uint16_t msgValue2, uint16_t msgValue3);
 // Deleting a task
