@@ -69,7 +69,8 @@ extern "C" {
 // Create LED control task
 ledQueue_t ledTaskCreate(int8_t ledGPIO, bool ledHigh, bool blinkPriority, const char* taskName, ledCustomControl_t customControl);
 // Sending a command to the task queue for mode switching
-bool ledTaskSend(ledQueue_t ledQueue, ledMode_t msgMode, uint16_t msgValue1, uint16_t msgValue2, uint16_t msgValue3);
+bool ledTaskSend(ledQueue_t ledQueue, const ledMode_t msgMode, const uint16_t msgValue1, const uint16_t msgValue2, const uint16_t msgValue3);
+bool ledTaskSendFromISR(ledQueue_t ledQueue, const ledMode_t msgMode, const uint16_t msgValue1, const uint16_t msgValue2, const uint16_t msgValue3);
 // Deleting a task
 void ledTaskDelete(ledQueue_t ledQueue);
 

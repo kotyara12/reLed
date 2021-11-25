@@ -485,6 +485,28 @@ bool ledTaskSend(ledQueue_t ledQueue, const ledMode_t msgMode, const uint16_t ms
   return false;
 }
 
+bool ledTaskSendFromISR(ledQueue_t ledQueue, const ledMode_t msgMode, const uint16_t msgValue1, const uint16_t msgValue2, const uint16_t msgValue3)
+{
+  if (ledQueue != NULL) {
+    // Create a message
+    ledQueueData_t msgQueue;
+    msgQueue.msgMode = msgMode;
+    msgQueue.msgValue1 = msgValue1;
+    msgQueue.msgValue2 = msgValue2;
+    msgQueue.msgValue3 = msgValue3;
+
+    // We have not woken a task at the start of the ISR.
+    BaseType_t xHigherPriorityTaskWoken;
+    xHigherPriorityTaskWoken = pdFALSE;
+    // Putting the created message into the queue
+    if (xQueueSendFromISR(ledQueue, &msgQueue, &xHigherPriorityTaskWoken) == pdPASS) {
+      if (xHigherPriorityTaskWoken) portYIELD_FROM_ISR();
+      return true;
+    };
+  };
+  return false;
+}
+
 // Deleting a task
 void ledTaskDelete(ledQueue_t ledQueue)
 {
