@@ -20,9 +20,13 @@ static const char * logTAG = "RLED";
   #if __has_include("project_config.h") 
     #include "project_config.h"
   #endif
+  #if __has_include("def_consts.h") 
+    #include "def_consts.h"
+  #endif
 #else
   /* Force import if compiler doesn't support __has_include (ESP8266, etc) */
   #include "project_config.h"
+  #include "def_consts.h"
 #endif
 
 /* If the parameters were not received, we use the default values. */
