@@ -456,7 +456,7 @@ ledQueue_t ledTaskCreate(int8_t ledGPIO, bool ledHigh, bool blinkPriority, const
   };
 
   // Create a task to control the LED
-  rlog_v(logTAG, "Creating task [ %s ] to control LED on GPIO %d, stack size in bytes: %d", taskName, ledGPIO, CONFIG_LED_TASK_STACK_SIZE);
+  rlog_i(logTAG, "Creating task [ %s ] to control LED on GPIO %d, stack size in bytes: %d", taskName, ledGPIO, CONFIG_LED_TASK_STACK_SIZE);
   TaskHandle_t ledTask;
   xTaskCreatePinnedToCore(ledTaskExec, taskName, CONFIG_LED_TASK_STACK_SIZE, (void*)handles, CONFIG_LED_TASK_PRIORITY, &ledTask, CONFIG_LED_TASK_CORE);
   if (ledTask == NULL) {
