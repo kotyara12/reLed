@@ -249,8 +249,8 @@ void espLed::flashOn(uint16_t flashQuantity, uint16_t flashDuration, uint16_t fl
   // Turn on the LED if the continuous light is not blocked by the counter
   if (_onCount == 0) {
     if (_ledOn) _ledOn = false;
-    _ledWait = _flashDuration / portTICK_RATE_MS; 
-    ledSetState(true);
+    _ledWait = 0; 
+    ledSetState(false);
   };
 }
 
@@ -291,8 +291,8 @@ void espLed::blinkOn(uint16_t blinkQuantity, uint16_t blinkDuration, uint16_t bl
   // Turn on the LED if the continuous light is not blocked by the counter
   if ((_onCount == 0) && !_ledFlash) {
     if (_ledOn) _ledOn = false;
-    _ledWait = _blinkDuration / portTICK_RATE_MS; 
-    ledSetState(true);
+    _ledWait = 0; 
+    ledSetState(false);
   };
 }
 
