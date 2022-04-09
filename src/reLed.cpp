@@ -431,7 +431,7 @@ void ledTaskExec(void *pvParameters)
 }
 
 // Create LED control task
-ledQueue_t ledTaskCreate(int8_t ledGPIO, bool ledHigh, bool blinkPriority, const char* taskName, ledCustomControl_t customControl)
+ledQueue_t ledTaskCreate(int8_t ledGPIO, bool ledHigh, bool blinkPriority, const char* taskName, const uint32_t taskStackSize, ledCustomControl_t customControl)
 {
   // Create a message queue to control the LED
   rlog_v(logTAG, "Creating message queue to control LED on GPIO %d", ledGPIO);
@@ -456,9 +456,9 @@ ledQueue_t ledTaskCreate(int8_t ledGPIO, bool ledHigh, bool blinkPriority, const
   };
 
   // Create a task to control the LED
-  rlog_i(logTAG, "Creating task [ %s ] to control LED on GPIO %d, stack size in bytes: %d", taskName, ledGPIO, CONFIG_LED_TASK_STACK_SIZE);
+  rlog_i(logTAG, "Creating task [ %s ] to control LED on GPIO %d, stack size in bytes: %d", taskName, ledGPIO, taskStackSize);
   TaskHandle_t ledTask;
-  xTaskCreatePinnedToCore(ledTaskExec, taskName, CONFIG_LED_TASK_STACK_SIZE, (void*)handles, CONFIG_LED_TASK_PRIORITY, &ledTask, CONFIG_LED_TASK_CORE);
+  xTaskCreatePinnedToCore(ledTaskExec, taskName, taskStackSize, (void*)handles, CONFIG_LED_TASK_PRIORITY, &ledTask, CONFIG_LED_TASK_CORE);
   if (ledTask == NULL) {
     delete handles;
     vQueueDelete(ledQueue);
