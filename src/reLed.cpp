@@ -481,7 +481,7 @@ bool ledTaskSend(ledQueue_t ledQueue, const ledMode_t msgMode, const uint16_t ms
     msgQueue.msgValue3 = msgValue3;
 
     // Putting the created message into the queue
-    if (xQueueSend(ledQueue, &msgQueue, portMAX_DELAY) == pdPASS) {
+    if (xQueueSend(ledQueue, &msgQueue, CONFIG_LED_QUEUE_WAIT) == pdPASS) {
       rlog_v(pcTaskGetTaskName(NULL), "New command send for LED: %d, %d, %d, %d", msgQueue.msgMode, msgQueue.msgValue1, msgQueue.msgValue2, msgQueue.msgValue3);
       return true;
     };
