@@ -1,5 +1,6 @@
 #include "reLed.h"
 #include "rLog.h"
+#include "esp_task_wdt.h"
 
 static const char * logTAG = "RLED";
 
@@ -31,16 +32,16 @@ static const char * logTAG = "RLED";
 
 /* If the parameters were not received, we use the default values. */
 #ifndef CONFIG_LED_QUEUE_SIZE
-#define CONFIG_LED_QUEUE_SIZE 3
+#define CONFIG_LED_QUEUE_SIZE 8
 #endif
 #ifndef CONFIG_LED_TASK_STACK_SIZE
 #define CONFIG_LED_TASK_STACK_SIZE 2048
 #endif
-#ifndef CONFIG_LED_TASK_PRIORITY
-#define CONFIG_LED_TASK_PRIORITY 5
+#ifndef CONFIG_TASK_PRIORITY_LED
+#define CONFIG_TASK_PRIORITY_LED 5
 #endif
-#ifndef CONFIG_LED_TASK_CORE
-#define CONFIG_LED_TASK_CORE 1
+#ifndef CONFIG_TASK_CORE_LED
+#define CONFIG_TASK_CORE_LED 1
 #endif
 
 // -----------------------------------------------------------------------------------------------------------------------
@@ -458,7 +459,7 @@ ledQueue_t ledTaskCreate(int8_t ledGPIO, bool ledHigh, bool blinkPriority, const
   // Create a task to control the LED
   rlog_i(logTAG, "Creating task [ %s ] to control LED on GPIO %d, stack size in bytes: %d", taskName, ledGPIO, taskStackSize);
   TaskHandle_t ledTask;
-  xTaskCreatePinnedToCore(ledTaskExec, taskName, taskStackSize, (void*)handles, CONFIG_LED_TASK_PRIORITY, &ledTask, CONFIG_LED_TASK_CORE);
+  xTaskCreatePinnedToCore(ledTaskExec, taskName, taskStackSize, (void*)handles, CONFIG_TASK_PRIORITY_LED, &ledTask, CONFIG_TASK_CORE_LED);
   if (ledTask == NULL) {
     delete handles;
     vQueueDelete(ledQueue);

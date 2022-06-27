@@ -14,6 +14,5 @@
   "license": "MIT",
   "homepage": "https://kotyara12.ru/pubs/iot/led32/",
   "frameworks": ["arduino", "espidf"],
-  "platforms": ["espressif32"],
-  "dependencies": {"kotyara12/rLog" : "^1.2.0"}
+  "platforms": ["espressif32"]
 }
