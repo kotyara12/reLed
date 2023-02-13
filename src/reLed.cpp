@@ -124,7 +124,7 @@ void espLed::initGPIO()
   _ledInit = true;
 
   if (_customControl == NULL) {
-    gpio_pad_select_gpio(static_cast<gpio_num_t>(_ledGPIO));
+    gpio_reset_pin(static_cast<gpio_num_t>(_ledGPIO));
     gpio_set_direction(static_cast<gpio_num_t>(_ledGPIO), GPIO_MODE_OUTPUT);
     gpio_set_pull_mode(static_cast<gpio_num_t>(_ledGPIO), GPIO_FLOATING);
   };
@@ -214,9 +214,9 @@ void espLed::ledOff(const bool fixed)
     _ledOn = false;
     if (_ledBlinkPriority) {
       if (_ledFlash && (_flashInterval > 0)) {
-        _ledWait = _flashInterval / portTICK_RATE_MS; 
+        _ledWait = pdMS_TO_TICKS(_flashInterval); 
       } else if (_ledBlink && (_blinkInterval > 0)) {
-        _ledWait = _blinkInterval / portTICK_RATE_MS; 
+        _ledWait = pdMS_TO_TICKS(_blinkInterval); 
         _blinkCount = 0;
       } else {
         _ledWait = portMAX_DELAY;
@@ -266,7 +266,7 @@ void espLed::flashOff()
     if (_onCount == 0) {
       if (_ledOn) _ledOn = false;
       if (_ledBlinkPriority && _ledBlink) {
-        _ledWait = _blinkInterval / portTICK_RATE_MS; 
+        _ledWait = pdMS_TO_TICKS(_blinkInterval); 
         _blinkCount = 0;
       } else {
         _ledBlink = false;
@@ -326,11 +326,11 @@ void espLed::processTimeout()
         _flashCount = 0;
         flashOff();
       } else {
-        _ledWait = _flashInterval / portTICK_RATE_MS;
+        _ledWait = pdMS_TO_TICKS(_flashInterval);
         ledSetState(false);
       };
     } else {
-      _ledWait = _flashDuration / portTICK_RATE_MS;
+      _ledWait = pdMS_TO_TICKS(_flashDuration);
       ledSetState(true);
     };
   } else if (_ledBlink) {
@@ -338,13 +338,13 @@ void espLed::processTimeout()
     if (_ledState) {
       if (++_blinkCount >= _blinkQuantity) {
         _blinkCount = 0;
-        _ledWait = _blinkInterval / portTICK_RATE_MS;
+        _ledWait = pdMS_TO_TICKS(_blinkInterval);
       } else {
-        _ledWait = _blinkDuration / portTICK_RATE_MS;
+        _ledWait = pdMS_TO_TICKS(_blinkDuration);
       };
       ledSetState(false);
     } else {
-      _ledWait = _blinkDuration / portTICK_RATE_MS;
+      _ledWait = pdMS_TO_TICKS(_blinkDuration);
       ledSetState(true);
     };
   };
