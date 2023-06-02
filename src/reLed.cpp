@@ -2,7 +2,9 @@
 #include "rLog.h"
 #include "esp_task_wdt.h"
 
+#if CONFIG_RLOG_PROJECT_LEVEL > RLOG_LEVEL_NONE
 static const char * logTAG = "RLED";
+#endif // CONFIG_RLOG_PROJECT_LEVEL
 
 // -----------------------------------------------------------------------------------------------------------------------
 // -------------------------------------------- Importing project parameters ---------------------------------------------
